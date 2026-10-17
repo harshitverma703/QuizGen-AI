@@ -1,0 +1,14 @@
+{
+  "name": "quizgenius-ai",
+  "version": "1.0.0",
+  "description": "A student-focused personalized quiz generator prototype",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.8",
+    "express": "^4.21.2"
+  }
+}

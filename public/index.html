@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Create practice quizzes and discover topics to study next." />
+  <title>QuizGenius AI — Personalized Learning</title>
+<link rel="stylesheet" href="styles.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="QuizGenius AI home"><span class="brand-mark">Q</span> QuizGenius <span class="ai-label">AI</span></a>
+    <span class="top-note">Learn smarter, one quiz at a time</span>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="eyebrow"><span class="spark">✦</span> PERSONALIZED PRACTICE</div>
+      <h1>Turn what you learn<br /><span>into what you know.</span></h1>
+      <p class="hero-copy">Create a quick quiz, check your understanding, and discover what to practice next.</p>
+    </section>
+<!-- PERFORMANCE DASHBOARD -->
+<section id="dashboard" class="dashboard">
+  <div class="dashboard-heading">
+    <div>
+      <p class="eyebrow">YOUR LEARNING JOURNEY</p>
+      <h2>Performance Dashboard</h2>
+      <p class="dashboard-subtitle">
+        Track your progress and understand how you're improving.
+      </p>
+    </div>
+
+    <button id="clearHistoryBtn" class="secondary-btn" type="button">
+      Clear History
+    </button>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="dashboard-stats">
+
+    <article class="dashboard-stat">
+      <span class="stat-icon">📚</span>
+      <p>Total Quizzes</p>
+      <h3 id="dashTotalQuizzes">0</h3>
+      <small>Completed sessions</small>
+    </article>
+
+    <article class="dashboard-stat">
+      <span class="stat-icon">🎯</span>
+      <p>Average Score</p>
+      <h3 id="dashAverageScore">0%</h3>
+      <small>Across all quizzes</small>
+    </article>
+
+    <article class="dashboard-stat">
+      <span class="stat-icon">🏆</span>
+      <p>Best Score</p>
+      <h3 id="dashBestScore">0%</h3>
+      <small>Your personal best</small>
+    </article>
+
+    <article class="dashboard-stat">
+      <span class="stat-icon">✅</span>
+      <p>Correct Answers</p>
+      <h3 id="dashCorrectAnswers">0</h3>
+      <small>Total correct responses</small>
+    </article>
+
+  </div>
+
+  <!-- PERFORMANCE CHART -->
+  <div class="dashboard-card">
+    <div class="dashboard-card-heading">
+      <div>
+        <h3>Performance Over Time</h3>
+        <p>Your scores across recent quiz attempts</p>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <canvas
+        id="performanceChart"
+        aria-label="Chart of quiz scores over time"
+        role="img">
+      </canvas>
+    </div>
+
+    <p id="chartEmptyMessage" class="dashboard-empty">
+      Complete your first quiz to see your performance chart.
+    </p>
+  </div>
+
+  <!-- RECENT QUIZ HISTORY -->
+  <div class="dashboard-card">
+    <div class="dashboard-card-heading">
+      <div>
+        <h3>Recent Quiz History</h3>
+        <p>Review your previous attempts</p>
+      </div>
+    </div>
+
+    <div id="quizHistory">
+      <p class="dashboard-empty">
+        No quizzes completed yet. Your results will appear here.
+      </p>
+    </div>
+  </div>
+</section>
+    <section id="setupPanel" class="setup-card">
+      <div class="section-heading">
+        <div><p class="eyebrow">START A SESSION</p><h2>Build your quiz</h2></div>
+        <span class="step-pill">01 / 02</span>
+      </div>
+      <form id="quizForm">
+        <label for="topic">Choose a subject</label>
+        <select id="topic" name="topic" required>
+          <option value="Data Structures">Data Structures</option>
+          <option value="JavaScript">JavaScript</option>
+          <option value="Web Development">Web Development</option>
+        </select>
+
+        <div class="form-row">
+          <div>
+            <label for="difficulty">Difficulty</label>
+            <select id="difficulty" name="difficulty">
+              <option>Easy</option><option selected>Medium</option><option>Hard</option>
+            </select>
+          </div>
+          <div>
+            <label for="count">Questions</label>
+            <select id="count" name="count">
+              <option value="3">3 questions</option><option value="5" selected>5 questions</option><option value="10">10 questions</option>
+            </select>
+          </div>
+        </div>
+        <p class="hint">This starter version uses a sample question bank. AI-powered generation can be added next.</p>
+        <button class="primary-btn" type="submit">Generate my quiz <span aria-hidden="true">→</span></button>
+        <div id="loadingIndicator" class="loading-indicator hidden" role="status" aria-live="polite">
+  <div class="spinner"></div>
+  <p>Generating your quiz...</p>
+  <small>AI is preparing questions for you. This may take a few seconds.</small>
+</div>
+        <p id="setupMessage" class="message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="quizPanel" class="quiz-card hidden" aria-live="polite">
+      <div class="quiz-top">
+        <div><p class="eyebrow" id="quizMeta">YOUR QUIZ</p><h2 id="quizTitle">Practice time</h2></div>
+        <span id="progressText" class="step-pill">Question 1</span>
+      </div>
+      <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+      <div id="questionArea"></div>
+      <div class="quiz-actions">
+        <button id="backBtn" class="secondary-btn" type="button">Back to setup</button>
+        <button id="nextBtn" class="primary-btn" type="button" disabled>Next question →</button>
+      </div>
+      <p id="quizMessage" class="message" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="resultPanel" class="result-card hidden">
+      <div class="result-icon">✓</div>
+      <p class="eyebrow">SESSION COMPLETE</p>
+      <h2>Your learning snapshot</h2>
+      <div class="score-wrap"><strong id="scoreValue">0%</strong><span id="scoreLabel">Keep practicing</span></div>
+      <div class="result-stats">
+        <div><strong id="correctValue">0</strong><span>Correct</span></div>
+        <div><strong id="totalValue">0</strong><span>Questions</span></div>
+        <div><strong id="missedValue">0</strong><span>To review</span></div>
+      </div>
+      <h3>Review & next steps</h3>
+      <div id="reviewList" class="review-list"></div>
+      <div id="recommendation" class="recommendation"></div>
+      <button id="retryBtn" class="primary-btn" type="button">Create another quiz ↗</button>
+    </section>
+
+    <section class="value-row" aria-label="How it helps">
+      <article><span class="value-icon">◎</span><div><h3>Focused practice</h3><p>Choose the topic you want to understand better.</p></div></article>
+      <article><span class="value-icon">↗</span><div><h3>Instant feedback</h3><p>Review answers and learn why they are correct.</p></div></article>
+      <article><span class="value-icon">✦</span><div><h3>Learn what’s next</h3><p>Use your results to plan your next study session.</p></div></article>
+    </section>
+    <footer>QuizGenius AI · Student learning prototype · Built for practice and feedback</footer>
+  </main>
+</body>
+</html>
