@@ -4,7 +4,7 @@ const path = require("path");
 const questions = require("./data/questions");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+
 const generatedQuestions = new Map();
 
 app.use(express.json());
@@ -303,6 +303,8 @@ app.post("/api/answer-key", (req, res) => {
   res.json({ answerKey });
 });
 
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-  console.log(`QuizGenius AI running at http://localhost:${PORT}`);
+  console.log(`QuizGenius AI running on port ${PORT}`);
 });
